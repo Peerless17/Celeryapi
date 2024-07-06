@@ -1704,11 +1704,41 @@ getrenv = function()
     return _ing1("getrenv")
  end
 
-function hookfunction(replaceclosure, hookedFunction)
-    return function(...)
-        local args = {...}
-        local result = {replaceclosure(...)}
-        hookedFunction(unpack(args))
-        return unpack(result)
+funcs.setclipboard = function(data)
+    repeat task.wait() until ClipboardQueue:Current()[1] == data or ClipboardQueue:IsEmpty()
+    ClipboardQueue:Queue(data)
+    local old = game:GetService("UserInputService"):GetFocusedTextBox()
+    local copy = ClipboardQueue:Current()[1]
+    ClipboardBox:CaptureFocus()
+    ClipboardBox.Text = copy
+    
+    local KeyCode = Enum.KeyCode
+    local Keys = {KeyCode.RightControl, KeyCode.A}
+    local Keys2 = {KeyCode.RightControl, KeyCode.C, KeyCode.V}
+    
+    for _, v in ipairs(Keys) do
+        vim:SendKeyEvent(true, v, false, game)
+        task.wait()
     end
+    for _, v in ipairs(Keys) do
+        vim:SendKeyEvent(false, v, false, game)
+        task.wait()
+    end
+    for _, v in ipairs(Keys2) do
+        vim:SendKeyEvent(true, v, false, game)
+        task.wait()
+    end
+    for _, v in ipairs(Keys2) do
+        vim:SendKeyEvent(false, v, false, game)
+        task.wait()
+    end
+    ClipboardBox.Text = ''
+    if old then old:CaptureFocus() end
+    task.wait(.18)
+    ClipboardQueue:Update()
 end
+
+	funcs.syn.write_clipboard = funcs.setclipboard
+funcs.toclipboard = funcs.setclipboard
+funcs.writeclipboard = funcs.setclipboard
+funcs.setrbxclipboard = funcs.setclipboard
