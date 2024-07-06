@@ -360,6 +360,40 @@ local function SafeOverride(a, b, c) --[[ Index, Data, Should override ]]
     return 2
 end
 
+-- new function 
+
+funcs.isreadonly = function(tbl)
+ if type(tbl) ~= 'table' then return false end
+ return table.isfrozen(tbl)
+end
+funcs.setreadonly = function(tbl, cond)
+ if cond then
+  table.freeze(tbl)
+ else
+  return funcs.deepclone(tbl)
+ end
+end
+funcs.httpget = function(url)
+ return game:HttpGet(url)
+end
+funcs.httppost = function(url, body, contenttype)
+ return game:HttpPostAsync(url, body, contenttype)
+end
+funcs.request = function(args)
+ local Body = nil
+ local Timeout = 0
+ local function callback(success, body)
+  Body = body
+  Body['Success'] = success
+ end
+ HttpService:RequestInternal(args):Start(callback)
+ while not Body and Timeout < 10 do
+  task.wait(.1)
+  Timeout = Timeout + .1
+ end
+ return Body
+end
+
 local function toluau(code)
     for _, p in ipairs(patterns) do
         code = code:gsub(p.pattern, function(var, value)
