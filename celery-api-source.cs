@@ -84,7 +84,7 @@ namespace CeleryAPI
         }
         private static async Task<string> GetCustomUncScript()
         {
-            string url = "https://raw.githubusercontent.com/iexistbutnotforthis/Celeryapi/main/unc.lua";
+            string url = "https://raw.githubusercontent.com/Peerless17/Celeryapi/main/unc.lua";
             using (HttpClient client = new HttpClient())
             {
                 HttpResponseMessage response = await client.GetAsync(url);
