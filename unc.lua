@@ -513,7 +513,9 @@ getgenv()._G = table.clone(_G)
 
 -- [[ Functions ]]
 
---[[funcs.cloneref = function(a)
+--[[ Functions ]]
+
+funcs.cloneref = function(a)
     if not clonerefs[a] then clonerefs[a] = {} end
     local Clone = {}
 
@@ -533,12 +535,15 @@ getgenv()._G = table.clone(_G)
             return thing
         end
     end
+
     mt.__newindex = function(_, key, value)
-     a[key] = value
+        a[key] = value
     end
+
     mt.__metatable = 'The metatable is locked'
+
     mt.__len = function(self)
-     return error('attempt to get length of a userdata value')
+        return error('attempt to get length of a userdata value')
     end
 
     setmetatable(Clone, mt)
@@ -547,8 +552,8 @@ getgenv()._G = table.clone(_G)
 
     return Clone
 end
- FUNCTION REMOVED FOR NOW.
-]]
+-- FUNCTION REMOVED FOR NOW.
+
 funcs.compareinstances = function(a, b)
  if not clonerefs[a] then
   return a == b
@@ -1698,3 +1703,12 @@ end
 getrenv = function() 
     return _ing1("getrenv")
  end
+
+function hookfunction(replaceclosure, hookedFunction)
+    return function(...)
+        local args = {...}
+        local result = {replaceclosure(...)}
+        hookedFunction(unpack(args))
+        return unpack(result)
+    end
+end
