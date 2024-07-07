@@ -1,4 +1,5 @@
 -- Definitions
+-- modification works
 --yes its pasted but who cares
 local _ing2 = 'skibidi toliet ohio sigma rizz'; 
 local _ing1 = string.gmatch(_ing2, _ing2) 
